@@ -178,6 +178,7 @@ with st.sidebar:
         "Navigation",
         [
             "📊 Dashboard",
+            "📈 Power BI Dashboard",
             "👥 Customer Intelligence",
             "🛍️ Product Intelligence",
             "🔗 Market Basket",
@@ -423,6 +424,161 @@ if page == "📊 Dashboard":
             )
         except Exception as e:
             st.error(f"Product table error: {e}")
+
+
+# ══════════════════════════════════════════════════════════════════════════════
+# PAGE: POWER BI DASHBOARD PREVIEW & DOCUMENTATION
+# ══════════════════════════════════════════════════════════════════════════════
+elif page == "📈 Power BI Dashboard":
+    st.markdown('<div class="page-title">📈 Microsoft Power BI Executive Dashboard</div>', unsafe_allow_html=True)
+    st.markdown('<div class="page-subtitle">Star-Schema Analytical Model • 7 Executive Pages • DAX Measures Library</div>', unsafe_allow_html=True)
+
+    # Top Badges
+    st.markdown("""
+    <div style="display: flex; gap: 8px; flex-wrap: wrap; margin-bottom: 1rem;">
+        <span class="insight-pill pill-blue">Star Schema (1 Fact, 5 Dims)</span>
+        <span class="insight-pill pill-green">25+ Production DAX Measures</span>
+        <span class="insight-pill pill-purple">7-Page Executive Report</span>
+        <span class="insight-pill pill-blue">Dark Navy Corporate Theme</span>
+    </div>
+    """, unsafe_allow_html=True)
+
+    # High-Resolution Dashboard Mockup
+    pbi_img_path = Path("/Volumes/Harshit Drive/enterprise-business-intelligence/powerbi/powerbi_dashboard_preview.jpg")
+    if pbi_img_path.exists():
+        st.image(str(pbi_img_path), caption="Figure 1: Microsoft Power BI Desktop — Page 1: Executive Overview (Simulated Desktop Interface)", use_container_width=True)
+    else:
+        st.info("Power BI preview image is being generated.")
+
+    st.markdown("---")
+    st.markdown("### 📑 Explore Power BI Report Pages")
+    st.caption("Select a dashboard page below to view its layout blueprint, KPI formulas, and visual specifications.")
+
+    pbi_page = st.selectbox(
+        "Select Power BI Report Page:",
+        [
+            "Page 1: Executive Overview",
+            "Page 2: Customer Intelligence",
+            "Page 3: Product Intelligence",
+            "Page 4: Department & Aisle Analytics",
+            "Page 5: Time & Operations",
+            "Page 6: Market Basket & Cross-Selling",
+            "Page 7: ML Decision Support"
+        ]
+    )
+
+    if pbi_page == "Page 1: Executive Overview":
+        col_p1_1, col_p1_2 = st.columns([1.2, 0.8])
+        with col_p1_1:
+            st.markdown("""
+            #### 🎯 Page 1: Executive Overview
+            **Target Audience**: C-Suite, VP of Merchandising, VP of Operations.  
+            **Objective**: Provide a bird's-eye view of enterprise health, revenue-driving departments, and customer order cadence.
+
+            ##### KPI Cards:
+            - **Total Orders**: `3.42M` *(DAX: `DISTINCTCOUNT(fact_orders[order_id])`)*
+            - **Total Items Purchased**: `32.4M` *(DAX: `COUNTROWS(fact_order_items)`)*
+            - **Unique Customers**: `206.2K` *(DAX: `DISTINCTCOUNT(fact_orders[user_id])`)*
+            - **Overall Reorder Rate**: `59.0%` *(DAX: `DIVIDE([Reordered Items], [Total Items Purchased], 0)`)*
+            - **Average Basket Size**: `10.1 items` *(DAX: `DIVIDE([Total Items], [Total Orders], 0)`)*
+            """)
+        with col_p1_2:
+            st.markdown("""
+            ##### Visual Components:
+            1. **Order Velocity by Hour**: Smooth Area chart with highlight on peak 10 AM - 4 PM window.
+            2. **Top 10 Departments**: Horizontal bar chart with data labels and % share.
+            3. **Order by Day of Week**: Column chart highlighting weekend vs weekday volume.
+            4. **Top 10 SKUs**: Matrix with volume and reorder propensity.
+            """)
+
+    elif pbi_page == "Page 2: Customer Intelligence":
+        st.markdown("""
+        #### 👥 Page 2: Customer Intelligence
+        **Target Audience**: Customer Lifecycle Marketing, Retention Directors.  
+        **Objective**: Analyze customer replenishment intervals, order distribution, and K-Means segmentation.
+
+        ##### Key Visuals & Measures:
+        - **Order Frequency Histogram**: Binned column chart (4 to 100 orders) showing median customer lifetime orders (10 orders).
+        - **Customer Segments Donut**:
+          - **Occasional Buyers** (57.7%): 7.1 avg orders, 31.0% repeat rate.
+          - **Loyal Regulars** (42.3%): 27.2 avg orders, 60.0% repeat rate.
+        - **Basket Size vs Reorder Rate Scatter**: Customer-level scatter plot with cluster color-coding.
+        - **DAX Measures**: `Average Days Between Orders`, `Loyal Customer Share`, `Unique Customers`.
+        """)
+
+    elif pbi_page == "Page 3: Product Intelligence":
+        st.markdown("""
+        #### 🛍️ Page 3: Product Intelligence & SKU Scorecard
+        **Target Audience**: Category Managers, Procurement Buyers.  
+        **Objective**: Track SKU velocity, repeat purchase index, and add-to-cart prioritization.
+
+        ##### Key Visuals & Slicers:
+        - **Slicers**: Department dropdown, Aisle dropdown, SKU search bar.
+        - **Top Repeat Purchase Items**: Filtered to min 500 orders — highlights dairy staples and organic produce (>75% reorders).
+        - **Cart Sequence Line Chart**: Shows how reorder probability decays from 70% (cart positions 1-3) to ~40% (cart positions 20+).
+        - **Product Scorecard Matrix**: SKU name, total volume, reorder rate, and category rank.
+        """)
+
+    elif pbi_page == "Page 4: Department & Aisle Analytics":
+        st.markdown("""
+        #### 🏬 Page 4: Department & Aisle Analytics
+        **Target Audience**: Retail Merchandisers, Inventory Planners.  
+        **Objective**: Understand cross-category basket composition and department share.
+
+        ##### Key Visuals:
+        - **Department Share Treemap**: Visualizing Produce (29.2%), Dairy Eggs (16.7%), Snacks (8.9%), and Beverages (8.3%).
+        - **Aisle Contribution Clustered Bar**: Top 25 aisles by volume with reorder saturation.
+        - **Decomposition Tree**: AI visual decomposing total units by Department → Aisle → Top SKUs.
+        """)
+
+    elif pbi_page == "Page 5: Time & Operations":
+        st.markdown("""
+        #### ⏰ Page 5: Time & Operations
+        **Target Audience**: Warehouse Operations, Delivery Fleet Logistics Managers.  
+        **Objective**: Optimize picker staffing and delivery driver scheduling based on temporal demand spikes.
+
+        ##### Key Visuals:
+        - **Demand Heatmap Matrix**: Day of Week (Rows) vs Hour of Day (Columns) with color-intensity formatting.
+        - **Weekend vs Weekday Ratio KPI**: Indicates Sunday & Monday peak volume.
+        - **Intraday Fulfillment Curve**: Dual-axis line chart showing cumulative running orders by hour.
+        """)
+
+    elif pbi_page == "Page 6: Market Basket & Cross-Selling":
+        st.markdown("""
+        #### 🔗 Page 6: Market Basket Analysis & Cross-Selling
+        **Target Audience**: E-Commerce Digital Merchandising, Recommendation Engine Leads.  
+        **Objective**: Uncover product affinity pairs to create bundles and automated "Frequently Bought Together" prompts.
+
+        ##### Key Visuals & Filters:
+        - **Lift vs Confidence Scatter Plot**: Bubble size representing joint support.
+        - **Top Association Rules Table**: Antecedent, Consequent, Support, Confidence, Lift.
+        - **Top Bundles**: *Limes + Organic Cilantro* (Lift 5.78), *Garlic + Yellow Onion* (Lift 5.70), *Avocado + Lemons* (Lift 4.10).
+        """)
+
+    elif pbi_page == "Page 7: ML Decision Support":
+        st.markdown("""
+        #### 🔮 Page 7: Machine Learning & Strategic Decision Support
+        **Target Audience**: Chief Commercial Officer, Strategy & Operations.  
+        **Objective**: Real-time ML model diagnostics, feature importance weights, and executive revenue scenario modeling.
+
+        ##### Key Visuals:
+        - **Model Performance Gauges**: ROC-AUC (0.792), F1-Score (0.784), Precision (73.0%), Recall (84.6%).
+        - **Feature Importance Bar Chart**: Shows Product Reorder Rate and Customer Reorder Rate as dominant drivers.
+        - **Interactive Revenue Waterfall**: Base Volume → Loyalty Shift (+5%) → Basket Expansion (+1 item) → Projected Output.
+        """)
+
+    st.markdown("---")
+    st.markdown("### 🛠️ Power BI Implementation Assets")
+    st.markdown("""
+    All files needed to build or customize this dashboard in Power BI Desktop are ready in your local directory:
+    - 📘 **[powerbi_build_guide.md](file:///Volumes/Harshit%20Drive/enterprise-business-intelligence/powerbi/powerbi_build_guide.md)** — Comprehensive step-by-step visual assembly guide.
+    - 📐 **[data_model_specification.md](file:///Volumes/Harshit%20Drive/enterprise-business-intelligence/powerbi/data_model_specification.md)** — Star Schema data model architecture and relationships.
+    - 🧮 **[dax_measures.dax](file:///Volumes/Harshit%20Drive/enterprise-business-intelligence/powerbi/dax_measures.dax)** — Complete DAX measures library (copy-paste ready).
+    - 🎨 **[enterprise_theme.json](file:///Volumes/Harshit%20Drive/enterprise-business-intelligence/powerbi/enterprise_theme.json)** — Corporate visual theme for Power BI Desktop.
+    - 📁 **[powerbi/data/](file:///Volumes/Harshit%20Drive/enterprise-business-intelligence/powerbi/data)** — Exported star-schema CSV tables for fast desktop import.
+    """)
+
+    st.markdown("---")
 
 
 # ══════════════════════════════════════════════════════════════════════════════
