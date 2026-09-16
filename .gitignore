@@ -1,0 +1,54 @@
+# Environment & credentials — NEVER commit these
+.env
+*.env.local
+
+# Python virtual environment
+.venv/
+venv/
+env/
+__pycache__/
+*.py[cod]
+*.pyo
+*.pyd
+.Python
+
+# Jupyter
+.ipynb_checkpoints/
+*.ipynb.bak
+
+# macOS system files
+.DS_Store
+.AppleDouble
+.LSOverride
+Icon
+._*
+Thumbs.db
+
+# Large processed/intermediate data files — too big for Git
+data/Processed/*.parquet
+data/Processed/*.csv
+
+# Logs
+logs/*.log
+
+# Distribution / packaging
+dist/
+build/
+*.egg-info/
+*.egg
+.eggs/
+
+# Test caches
+.pytest_cache/
+.coverage
+htmlcov/
+
+# IDE
+.idea/
+.vscode/
+*.swp
+*.swo
+
+# Temp
+*.tmp
+*.bak
