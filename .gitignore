@@ -24,9 +24,9 @@ Icon
 ._*
 Thumbs.db
 
-# Large processed/intermediate data files — too big for Git
-data/Processed/*.parquet
-data/Processed/*.csv
+# Large dataset files — too big for Git
+data/Raw/
+data/Processed/
 
 # Logs
 logs/*.log

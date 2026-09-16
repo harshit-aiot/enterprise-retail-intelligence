@@ -1,0 +1,161 @@
+// ============================================================
+// ENTERPRISE RETAIL INTELLIGENCE & DECISION ENGINE
+// DAX MEASURES LIBRARY
+// ============================================================
+
+// TABLE: _Measures
+// Create a blank table called '_Measures' in Power BI to organize all KPI calculations.
+
+// ------------------------------------------------------------
+// 1. CORE VOLUME & CUSTOMER KPIs
+// ------------------------------------------------------------
+
+Total Orders = 
+DISTINCTCOUNT(fact_orders[order_id])
+
+Total Products = 
+DISTINCTCOUNT(dim_products[product_id])
+
+Total Items Purchased = 
+COUNTROWS(fact_order_items)
+
+Unique Customers = 
+DISTINCTCOUNT(fact_orders[user_id])
+
+Average Orders per Customer = 
+DIVIDE([Total Orders], [Unique Customers], 0)
+
+Average Basket Size = 
+DIVIDE([Total Items Purchased], [Total Orders], 0)
+
+// ------------------------------------------------------------
+// 2. REORDER & RETENTION KPIs
+// ------------------------------------------------------------
+
+Reordered Items = 
+CALCULATE(
+    COUNTROWS(fact_order_items),
+    fact_order_items[reordered] = 1
+)
+
+Reorder Rate = 
+DIVIDE([Reordered Items], [Total Items Purchased], 0)
+
+First Time Purchases = 
+CALCULATE(
+    COUNTROWS(fact_order_items),
+    fact_order_items[reordered] = 0
+)
+
+First Time Purchase Rate = 
+DIVIDE([First Time Purchases], [Total Items Purchased], 0)
+
+Average Days Between Orders = 
+AVERAGE(fact_orders[days_since_prior_order])
+
+// ------------------------------------------------------------
+// 3. PRODUCT & DEPARTMENT ANALYTICS
+// ------------------------------------------------------------
+
+Department Total Items = 
+CALCULATE(
+    [Total Items Purchased],
+    ALLSELECTED(dim_departments[department])
+)
+
+Department Share = 
+DIVIDE([Total Items Purchased], [Department Total Items], 0)
+
+Product Diversity = 
+DIVIDE(
+    DISTINCTCOUNT(fact_order_items[product_id]),
+    [Total Orders],
+    0
+)
+
+Product Rank by Volume = 
+RANKX(
+    ALLSELECTED(dim_products[product_name]),
+    [Total Items Purchased],
+    ,
+    DESC,
+    Dense
+)
+
+// ------------------------------------------------------------
+// 4. TEMPORAL & RUNNING TOTALS
+// ------------------------------------------------------------
+
+Running Total Orders by Hour = 
+CALCULATE(
+    [Total Orders],
+    FILTER(
+        ALLSELECTED(dim_time[hour_of_day]),
+        dim_time[hour_of_day] <= MAX(dim_time[hour_of_day])
+    )
+)
+
+Weekend Orders = 
+CALCULATE(
+    [Total Orders],
+    fact_orders[order_dow] IN {0, 1} // Sunday (0) and Monday/Weekend (1)
+)
+
+Weekday Orders = 
+CALCULATE(
+    [Total Orders],
+    NOT(fact_orders[order_dow] IN {0, 1})
+)
+
+Weekend vs Weekday Ratio = 
+DIVIDE([Weekend Orders], [Weekday Orders], 0)
+
+Peak Hour Order Share = 
+VAR MaxHourOrders = 
+    MAXX(
+        VALUES(fact_orders[order_hour_of_day]),
+        [Total Orders]
+    )
+RETURN
+    DIVIDE(MaxHourOrders, [Total Orders], 0)
+
+// ------------------------------------------------------------
+// 5. CUSTOMER SEGMENTATION KPIs
+// ------------------------------------------------------------
+
+Loyal Regulars Customers = 
+CALCULATE(
+    [Unique Customers],
+    dim_customers[cluster_name] = "Loyal Regulars"
+)
+
+Occasional Buyers Customers = 
+CALCULATE(
+    [Unique Customers],
+    dim_customers[cluster_name] = "Occasional Buyers"
+)
+
+Loyal Customer Share = 
+DIVIDE([Loyal Regulars Customers], [Unique Customers], 0)
+
+// ------------------------------------------------------------
+// 6. MACHINE LEARNING & MARKET BASKET METRICS
+// ------------------------------------------------------------
+
+Max Basket Lift = 
+MAX(fact_market_basket[lift])
+
+Average Basket Lift = 
+AVERAGE(fact_market_basket[lift])
+
+Model Precision = 
+0.730
+
+Model Recall = 
+0.846
+
+Model ROC_AUC = 
+0.792
+
+Model F1_Score = 
+0.784
